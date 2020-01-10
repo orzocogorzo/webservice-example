@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Web Service</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <!-- LEAFLET -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+
+  <style>
+    body {margin: 0; padding: 0px}
+    #page {
+      height: 100vh;
+    }
+
+    #header {
+      height: 50px;
+    }
+
+    #filters {
+      display: flex;
+      height: 50px;
+    }
+
+    #filters .filter {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 50px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #filters .filter label {
+      flex: 0.5;
+      opacity: .6;
+    }
+
+    #filters .filter select {
+      width: 200px;
+    }
+
+    #content {
+      height: calc(100% - 50px);
+    }
+
+    #map {
+      height: 100%;
+    }
+
+  </style>
+  
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <div id="filters">
+        <div class="filter" id="sector">
+          <label>Sector</label>
+          <select name="sector">
+            <option value="" selected>Tots</option>
+            <option value="Locals buits en venda">Locals buits en venda</option>
+            <option value="Altres">Altres</option>
+            <option value="Sense informació">Sense informació</option>
+            <option value="En reforma">En reforma</option>
+            <option value="Locals buits en venda i lloguer">Locals buits en venda i lloguer</option>
+            <option value="Serveis">Serveis</option>
+            <option value="Locals buits en lloguer">Locals buits en lloguer</option>
+            <option value="Comerç al detall">Comerç al detall</option>
+          </select>
+        </div>
+        <div class="filter" id="districte">
+          <label>Districte</label>
+          <select name="districte">
+            <option value="" selected>Tots</option>
+            <option value="Eixample">Eixample</option>
+            <option value="Les Corts">Les Corts</option>
+            <option value="Gràcia">Gràcia</option>
+            <option value="Sant Andreu">Sant Andreu</option>
+            <option value="Ciutat Vella">Ciutat Vella</option>
+            <option value="Sarrià-Sant Gervasi">Sarrià-Sant Gervasi</option>
+            <option value="Sant Martí">Sant Martí</option>
+            <option value="Horta-Guinardó">Horta-Guinardó</option>
+            <option value="Sants-Montjuïc">Sants-Montjuïc</option>
+            <option value="Nou Barris">Nou Barris</option>
+          </select>
+        </div>
+        <div class="filter" id="barri">
+          <label>Barri</label>
+          <select name="barri">
+            <option value="" selected>Tots</option>
+            <option value="Sants">Sants</option>
+            <option value="el Poblenou">el Poblenou</option>
+            <option value="el Besòs i el Maresme">el Besòs i el Maresme</option>
+            <option value="Torre Baró">Torre Baró</option>
+            <option value="Verdun">Verdun</option>
+            <option value="el Coll">el Coll</option>
+            <option value="la Barceloneta">la Barceloneta</option>
+            <option value="Sant Gervasi  la Bonanova">Sant Gervasi la Bonanova</option>
+            <option value="el Poble Sec">el Poble Sec</option>
+            <option value="la Trinitat Nova">la Trinitat Nova</option>
+            <option value="el Parc i la Llacuna del Poblenou">el Parc i la Llacuna del Poblenou</option>
+            <option value="la Sagrada Família">la Sagrada Família</option>
+            <option value="Sant Andreu">Sant Andreu</option>
+            <option value="la Salut">la Salut</option>
+            <option value="la Sagrera">la Sagrera</option>
+            <option value="la Vila Olímpica del Poblenou">la Vila Olímpica del Poblenou</option>
+            <option value="Pedralbes">Pedralbes</option>
+            <option value="la Bordeta">la Bordeta</option>
+            <option value="la Font de la Guatlla">la Font de la Guatlla</option>
+            <option value="el Baix Guinardó">el Baix Guinardó</option>
+            <option value="el Barri Gòtic">el Barri Gòtic</option>
+            <option value="el Carmel">el Carmel</option>
+            <option value="la Maternitat i Sant Ramon">la Maternitat i Sant Ramon</option>
+            <option value="Baró de Viver">Baró de Viver</option>
+            <option value="Sants  Badal">Sants Badal</option>
+            <option value="Sant Gervasi  Galvany">Sant Gervasi Galvany</option>
+            <option value="Hostafrancs">Hostafrancs</option>
+            <option value="l'Antiga Esquerra de l'Eixample">l'Antiga Esquerra de l'Eixample</option>
+            <option value="la Guineueta">la Guineueta</option>
+            <option value="les Tres Torres">les Tres Torres</option>
+            <option value="Canyelles">Canyelles</option>
+            <option value="Sant Martí de Provençals">Sant Martí de Provençals</option>
+            <option value="Vallvidrera, el Tibidabo i les Planes">Vallvidrera, el Tibidabo i les Planes</option>
+            <option value="Can Peguera">Can Peguera</option>
+            <option value="el Fort Pienc">el Fort Pienc</option>
+            <option value="Porta">Porta</option>
+            <option value="la Marina de Port">la Marina de Port</option>
+            <option value="Navas">Navas</option>
+            <option value="el Bon Pastor">el Bon Pastor</option>
+            <option value="la Prosperitat">la Prosperitat</option>
+            <option value="Can Baró">Can Baró</option>
+            <option value="la Vila de Gràcia">la Vila de Gràcia</option>
+            <option value="Les Corts">Les Corts</option>
+            <option value="Sant Antoni">Sant Antoni</option>
+            <option value="el Guinardó">el Guinardó</option>
+            <option value="Horta">Horta</option>
+            <option value="la Verneda i la Pau">la Verneda i la Pau</option>
+            <option value="Sarrià">Sarrià</option>
+            <option value="la Marina del Prat Vermell">la Marina del Prat Vermell</option>
+            <option value="La Barceloneta">La Barceloneta</option>
+            <option value="Vallbona">Vallbona</option>
+            <option value="la Nova Esquerra de l'Eixample">la Nova Esquerra de l'Eixample</option>
+            <option value="el Putxet i el Farró">el Putxet i el Farró</option>
+            <option value="Sant Genís dels Agudells">Sant Genís dels Agudells</option>
+            <option value="Provençals del Poblenou">Provençals del Poblenou</option>
+            <option value="la Vall d'Hebron">la Vall d'Hebron</option>
+            <option value="el Camp d'en Grassot i Gràcia Nova">el Camp d'en Grassot i Gràcia Nova</option>
+            <option value="la Font d'en Fargues">la Font d'en Fargues</option>
+            <option value="Ciutat Meridiana">Ciutat Meridiana</option>
+            <option value="el Raval">el Raval</option>
+            <option value="la Dreta de l'Eixample">la Dreta de l'Eixample</option>
+            <option value="Montbau">Montbau</option>
+            <option value="les Roquetes">les Roquetes</option>
+            <option value="el Congrés i els Indians">el Congrés i els Indians</option>
+            <option value="Diagonal Mar i el Front Marítim del Poblenou">Diagonal Mar i el Front Marítim del Poblenou</option>
+            <option value="la Teixonera">la Teixonera</option>
+            <option value="el Turó de la Peira">el Turó de la Peira</option>
+            <option value="Vallcarca i els Penitents">Vallcarca i els Penitents</option>
+            <option value="la Clota">la Clota</option>
+            <option value="el Clot">el Clot</option>
+            <option value="el Camp de l'Arpa del Clot">el Camp de l'Arpa del Clot</option>
+            <option value="les Corts">les Corts</option>
+            <option value="la Trinitat Vella">la Trinitat Vella</option>
+            <option value="Vilapicina i la Torre Llobeta">Vilapicina i la Torre Llobeta</option>
+            <option value="Sant Pere, Santa Caterina i la Ribera">Sant Pere, Santa Caterina i la Ribera</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div id="content">
+      <div id="map"></div>
+    </div>
+  </div>
+
+  <script>
+
+    // MAP
+    var map = L.map('map').setView([41.41012988179705, 2.193660736083985], 13);
+    var currentLayer;
+
+    map.on("click", function (ev) {
+      debugger;
+      var latlng= ev.latlng;
+      var ajax = new XMLHttpRequest();
+      ajax.open("GET", "distance?lng=" + latlng.lng + "&lat=" + latlng.lat);
+      ajax.onreadystatechange = function () {
+        if (this.readyState == 4) {
+          if (this.status == 200) {
+            currentLayer && map.removeLayer(currentLayer);
+            currentLayer = L.geoJSON(JSON.parse(this.response))
+            currentLayer.addTo(map);
+          }
+        }
+      }
+      ajax.send();
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+    }).addTo(map);
+
+    // AJAX
+    function requestData () {
+      var state = getState();
+      var ajax = new XMLHttpRequest();
+      var url = "query";
+      if (state.sector) {
+        url += "/"+state.sector;
+        if (state.districte) {
+          url += "/"+state.districte;
+          if (state.barri) {
+            url += "/"+state.barri;
+          }
+        }
+      }
+      // /query/<?sector>/<?districte>/<?barri>
+
+      ajax.open("GET", url, true);
+      ajax.onreadystatechange = function () {
+        if (this.readyState == 4) {
+          if (this.status == 200) {
+            currentLayer && map.removeLayer(currentLayer);
+            currentLayer = L.geoJSON(JSON.parse(this.response));
+            currentLayer.addTo(map);
+          }
+        }
+      }
+      ajax.send();
+    }
+    
+    // SELECTORS
+    var selectors = document.getElementsByTagName("select");
+    for (var i=0, len=selectors.length; i<len; i++) {
+      selectors[i].addEventListener("change", requestData);
+    }
+
+    function getState () {
+      var state = {};
+      for (var i=0, len=selectors.length; i<len; i++) {
+        state[selectors[i].name] = selectors[i].value;
+      }
+      return state;
+    }
+
+    requestData();
+  </script>
+</body>
+</html>
